@@ -2,6 +2,8 @@ async function fetchProducts(filters = {}) {
     let url = '/products?';
     if (filters.category) url += `category=${filters.category}&`;
     if (filters.max_price) url += `max_price=${filters.max_price}`;
+    // Name based filter
+    if (filters.q) url += `q=${filters.q}`; 
 
     const res = await fetch(url);
     const data = await res.json();
@@ -33,8 +35,15 @@ function renderProducts(products) {
 function applyFilters() {
     const category = document.getElementById('categoryFilter').value;
     const max_price = document.getElementById('priceFilter').value;
-    fetchProducts({ category, max_price });
+    const q = document.getElementById('searchInput').value;
+    fetchProducts({ category, max_price, q });
 }
+
+// 🔍 Live search functionality
+document.getElementById('searchInput').addEventListener('input', () => {
+    applyFilters();
+});
+
 
 window.onload = () => fetchProducts();
 
